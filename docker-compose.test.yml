@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Service to execute Vitest Unit and API Integration tests
+  test-unit-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    environment:
+      - NODE_ENV=test
+      - JWT_SECRET=super-secret-jwt-key
+    command: npm run test
+
+  # Service to execute Playwright E2E browser tests against the running application
+  test-e2e:
+    image: mcr.microsoft.com/playwright:v1.60.0-jammy
+    volumes:
+      - .:/work
+    working_dir: /work
+    environment:
+      - PLAYWRIGHT_TEST_BASE_URL=http://web:3000
+    depends_on:
+      - web
+    command: >
+      sh -c "until node -e \"const net = require('net'); const c = net.connect({port: 3000, host: 'web'}, () => process.exit(0)); c.on('error', () => process.exit(1));\"; do echo 'Waiting for app to start...'; sleep 1; done && npm install --legacy-peer-deps && npx playwright test"
