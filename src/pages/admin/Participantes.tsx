@@ -9,6 +9,7 @@ export function Participantes() {
   const [delegacoes, setDelegacoes] = useState<Delegacao[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [editError, setEditError] = useState('');
 
   const [formData, setFormData] = useState({
     nomeCompleto: '',
@@ -92,6 +93,7 @@ export function Participantes() {
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingParticipant) return;
+    setEditError('');
     try {
       const nascimento = new Date(editFormData.dataNascimento);
       const today = new Date();
@@ -102,7 +104,7 @@ export function Participantes() {
       }
 
       if (idade < 10) {
-        alert('Participante deve ter 10 anos ou mais.');
+        setEditError('Participante deve ter 10 anos ou mais.');
         return;
       }
 
@@ -116,25 +118,26 @@ export function Participantes() {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao atualizar participante');
+        setEditError(err.error || 'Erro ao atualizar participante');
       }
     } catch (err) {
-      alert('Erro de conexão ao atualizar participante');
+      setEditError('Erro de conexão ao atualizar participante');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir este participante (Soft Delete)? Todas as associações de equipes serão removidas.')) return;
+    setError('');
     try {
       const res = await fetch(`/api/participantes/${id}`, { method: 'DELETE' });
       if (res.ok) {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir participante');
+        setError(err.error || 'Erro ao excluir participante');
       }
-    } catch (error) {
-      alert('Erro de conexão ao excluir participante');
+    } catch (err) {
+      setError('Erro de conexão ao excluir participante');
     }
   };
 
@@ -162,6 +165,7 @@ export function Participantes() {
       tipo: p.tipo as any,
       delegacaoId: p.delegacaoId || ''
     });
+    setEditError('');
   };
 
   const exportExcel = () => {
@@ -189,7 +193,11 @@ export function Participantes() {
         </button>
       </header>
 
-      {error && <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100">{error}</div>}
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
 
       {/* Novo Participante */}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
@@ -323,6 +331,11 @@ export function Participantes() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Participante</h2>
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome Completo</label>

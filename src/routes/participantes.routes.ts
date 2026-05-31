@@ -46,6 +46,13 @@ router.post('/', requireAuth(), validateBody(ParticipantSchema), async (req: any
     if (req.user.role === 'MODERADOR' && p.delegacaoId !== req.user.delegacaoId) {
       return res.status(403).json({ error: 'Só pode cadastrar da própria delegação' });
     }
+
+    // Check if participant with this CPF already exists
+    const existingPart = await db.getParticipanteByCpf(p.cpf);
+    if (existingPart) {
+      return res.status(400).json({ error: 'CPF já cadastrado para outro participante' });
+    }
+
     p.id = uuidv4();
     await db.createParticipante(p);
 
@@ -80,6 +87,14 @@ router.put('/:id', requireAuth(['ADMIN_GERAL', 'MANAGER', 'MODERADOR']), validat
       }
       if (body.delegacaoId && body.delegacaoId !== req.user.delegacaoId) {
         return res.status(403).json({ error: 'Não é possível mover participante para outra delegação' });
+      }
+    }
+
+    // Check if another participant with this CPF already exists
+    if (body.cpf && body.cpf !== old.cpf) {
+      const existingPart = await db.getParticipanteByCpf(body.cpf);
+      if (existingPart && existingPart.id !== id) {
+        return res.status(400).json({ error: 'CPF já cadastrado para outro participante' });
       }
     }
 

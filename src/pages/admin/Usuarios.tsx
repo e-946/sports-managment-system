@@ -30,6 +30,8 @@ export function Usuarios() {
     delegacaoId: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const [editError, setEditError] = useState('');
 
   const loadData = () => {
     fetch('/api/usuarios').then(r => r.json()).then(data => setUsuarios(Array.isArray(data) ? data : []));
@@ -42,6 +44,7 @@ export function Usuarios() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     try {
       const res = await fetch('/api/usuarios', {
         method: 'POST',
@@ -53,16 +56,17 @@ export function Usuarios() {
         setFormData({ nome: '', cpf: '', password: '', role: user?.role === 'MANAGER' ? 'MODERADOR' : 'MANAGER', delegacaoId: '' });
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao cadastrar usuário');
+        setError(err.error || 'Erro ao cadastrar usuário');
       }
-    } catch(e) {
-      alert('Erro de conexão ao cadastrar usuário');
+    } catch(err) {
+      setError('Erro de conexão ao cadastrar usuário');
     }
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
+    setEditError('');
     try {
       const payload: any = {
         nome: editFormData.nome,
@@ -83,25 +87,26 @@ export function Usuarios() {
         setEditingUser(null);
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao atualizar usuário');
+        setEditError(err.error || 'Erro ao atualizar usuário');
       }
-    } catch(e) {
-      alert('Erro de conexão ao atualizar usuário');
+    } catch(err) {
+      setEditError('Erro de conexão ao atualizar usuário');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir este usuário (Soft Delete)?')) return;
+    setError('');
     try {
       const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setUsuarios(usuarios.filter(u => u.id !== id));
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir usuário');
+        setError(err.error || 'Erro ao excluir usuário');
       }
-    } catch(e) {
-      alert('Erro de conexão ao excluir usuário');
+    } catch(err) {
+      setError('Erro de conexão ao excluir usuário');
     }
   };
 
@@ -124,10 +129,16 @@ export function Usuarios() {
       delegacaoId: matchedDel ? matchedDel.id : '',
       password: ''
     });
+    setEditError('');
   };
 
   return (
     <div className="flex flex-col gap-6 flex-1 h-full">
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
         <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
           <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
@@ -227,6 +238,11 @@ export function Usuarios() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Usuário</h2>
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome</label>

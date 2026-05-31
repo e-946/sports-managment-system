@@ -42,7 +42,8 @@ test.describe('Moderator Permission & Restrictive Flow', () => {
     await page.click('button:has-text("Cadastrar Participante")');
     await expect(page.locator('table')).toContainText('Mod-Canadá');
 
-    // Log out Admin
+    // Log out Admin (Wait briefly for DOM stability)
+    await page.waitForTimeout(500);
     await page.click('button:has-text("Sair")');
     await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
 

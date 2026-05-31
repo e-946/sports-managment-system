@@ -315,6 +315,23 @@ export const db = {
       delegacaoId: p.delegacao_id
     };
   },
+  getParticipanteByCpf: async (cpf: string) => {
+    const res = await pool.query('SELECT * FROM participantes WHERE cpf = $1 AND deleted_at IS NULL', [cpf]);
+    if (res.rows.length === 0) return null;
+    const p = res.rows[0];
+    return {
+      id: p.id,
+      nomeCompleto: p.nome_completo,
+      nomeAbreviado: p.nome_abreviado,
+      cpf: p.cpf,
+      dataNascimento: p.data_nascimento,
+      idade: p.idade,
+      sexo: p.sexo,
+      celular: p.celular,
+      tipo: p.tipo,
+      delegacaoId: p.delegacao_id
+    };
+  },
   getParticipantes: async () => {
     const res = await pool.query('SELECT * FROM participantes WHERE deleted_at IS NULL');
     return res.rows.map(p => ({

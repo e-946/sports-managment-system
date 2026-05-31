@@ -49,6 +49,11 @@ router.get('/', requireAuth(), async (req: any, res) => {
 router.post('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(MatchSchema), async (req: any, res) => {
   try {
     const p = req.body;
+
+    if (p.equipe1Id && p.equipe2Id && p.equipe1Id === p.equipe2Id) {
+      return res.status(400).json({ error: 'As equipes de uma partida devem ser diferentes' });
+    }
+
     p.id = uuidv4();
     await db.createPartida(p);
     res.json(p);
@@ -75,6 +80,10 @@ router.put('/:id', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(MatchSc
       medalhaEquipe1: body.medalhaEquipe1 !== undefined ? (body.medalhaEquipe1 === '' ? null : body.medalhaEquipe1) : old.medalhaEquipe1,
       medalhaEquipe2: body.medalhaEquipe2 !== undefined ? (body.medalhaEquipe2 === '' ? null : body.medalhaEquipe2) : old.medalhaEquipe2
     };
+
+    if (updated.equipe1Id && updated.equipe2Id && updated.equipe1Id === updated.equipe2Id) {
+      return res.status(400).json({ error: 'As equipes de uma partida devem ser diferentes' });
+    }
 
     const changes = getChanges(old, updated);
     if (Object.keys(changes).length > 0) {

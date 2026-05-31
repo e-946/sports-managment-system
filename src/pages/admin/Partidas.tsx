@@ -8,6 +8,8 @@ export function Partidas() {
   const [partidas, setPartidas] = useState<Partida[]>([]);
   const [esportes, setEsportes] = useState<Esporte[]>([]);
   const [equipes, setEquipes] = useState<Equipe[]>([]);
+  const [error, setError] = useState('');
+  const [editError, setEditError] = useState('');
   
   const [formData, setFormData] = useState({
     esporteId: '',
@@ -50,8 +52,9 @@ export function Partidas() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     if (formData.equipe1Id === formData.equipe2Id) {
-      alert("As equipes devem ser diferentes");
+      setError("As equipes devem ser diferentes");
       return;
     }
     try {
@@ -65,18 +68,19 @@ export function Partidas() {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao registrar partida');
+        setError(err.error || 'Erro ao registrar partida');
       }
-    } catch(e) {
-      alert('Erro de conexão ao registrar partida');
+    } catch(err) {
+      setError('Erro de conexão ao registrar partida');
     }
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMatch) return;
+    setEditError('');
     if (editFormData.equipe1Id === editFormData.equipe2Id) {
-      alert("As equipes devem ser diferentes");
+      setEditError("As equipes devem ser diferentes");
       return;
     }
 
@@ -95,25 +99,26 @@ export function Partidas() {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao atualizar partida');
+        setEditError(err.error || 'Erro ao atualizar partida');
       }
-    } catch (error) {
-      alert('Erro de conexão ao atualizar partida');
+    } catch (err) {
+      setEditError('Erro de conexão ao atualizar partida');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir esta partida (Soft Delete)?')) return;
+    setError('');
     try {
       const res = await fetch(`/api/partidas/${id}`, { method: 'DELETE' });
       if (res.ok) {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir partida');
+        setError(err.error || 'Erro ao excluir partida');
       }
-    } catch (error) {
-      alert('Erro de conexão ao excluir partida');
+    } catch (err) {
+      setError('Erro de conexão ao excluir partida');
     }
   };
 
@@ -134,6 +139,7 @@ export function Partidas() {
       medalhaEquipe1: p.medalhaEquipe1 || '',
       medalhaEquipe2: p.medalhaEquipe2 || '',
     });
+    setEditError('');
   };
 
   const equipesFiltradas = equipes.filter(e => e.esporteId === formData.esporteId);
@@ -147,6 +153,12 @@ export function Partidas() {
           <p className="text-slate-500 text-sm font-medium mt-1">Registre os resultados de cada fase.</p>
         </div>
       </header>
+
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
 
       {/* Registrar Partida */}
       {canEditOrDelete() && (
@@ -315,6 +327,11 @@ export function Partidas() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Partida</h2>
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
               <form onSubmit={handleEditSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>

@@ -24,6 +24,8 @@ export function Esportes() {
     minParticipantes: 1,
     maxParticipantes: 1,
   });
+  const [error, setError] = useState('');
+  const [editError, setEditError] = useState('');
 
   const loadData = () => {
     fetch('/api/esportes').then(res => res.json()).then(data => setEsportes(Array.isArray(data) ? data : []));
@@ -35,6 +37,7 @@ export function Esportes() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     try {
       const res = await fetch('/api/esportes', {
         method: 'POST',
@@ -47,16 +50,17 @@ export function Esportes() {
         setFormData({ ...formData, nome: '' });
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao cadastrar esporte');
+        setError(err.error || 'Erro ao cadastrar esporte');
       }
-    } catch (e) {
-      alert('Erro de conexão ao cadastrar esporte');
+    } catch (err) {
+      setError('Erro de conexão ao cadastrar esporte');
     }
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEsporte) return;
+    setEditError('');
     try {
       const res = await fetch(`/api/esportes/${editingEsporte.id}`, {
         method: 'PUT',
@@ -68,25 +72,26 @@ export function Esportes() {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao atualizar esporte');
+        setEditError(err.error || 'Erro ao atualizar esporte');
       }
-    } catch (error) {
-      alert('Erro de conexão ao atualizar esporte');
+    } catch (err) {
+      setEditError('Erro de conexão ao atualizar esporte');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir este esporte (Soft Delete)? Todas as equipes e partidas associadas serão removidas logica e atomicamente.')) return;
+    setError('');
     try {
       const res = await fetch(`/api/esportes/${id}`, { method: 'DELETE' });
       if (res.ok) {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir esporte');
+        setError(err.error || 'Erro ao excluir esporte');
       }
-    } catch (error) {
-      alert('Erro de conexão ao excluir esporte');
+    } catch (err) {
+      setError('Erro de conexão ao excluir esporte');
     }
   };
 
@@ -104,6 +109,7 @@ export function Esportes() {
       minParticipantes: esp.minParticipantes,
       maxParticipantes: esp.maxParticipantes,
     });
+    setEditError('');
   };
 
   return (
@@ -114,6 +120,12 @@ export function Esportes() {
           <p className="text-slate-500 text-sm font-medium mt-1">Cadastre os esportes, categorias e regras de participantes.</p>
         </div>
       </header>
+
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
 
       {/* Novo Esporte */}
       {canEditOrDelete() && (
@@ -230,6 +242,11 @@ export function Esportes() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Esporte</h2>
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome</label>

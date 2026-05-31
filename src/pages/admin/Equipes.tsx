@@ -27,6 +27,8 @@ export function Equipes() {
 
   const [partSearch, setPartSearch] = useState('');
   const [editPartSearch, setEditPartSearch] = useState('');
+  const [error, setError] = useState('');
+  const [editError, setEditError] = useState('');
 
   const loadData = () => {
     fetch('/api/equipes').then(r => r.json()).then(data => setEquipes(Array.isArray(data) ? data : []));
@@ -71,6 +73,7 @@ export function Equipes() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     const res = await fetch('/api/equipes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -78,16 +81,18 @@ export function Equipes() {
     });
     if (res.ok) {
       setFormData(prev => ({ ...prev, nome: '', participanteIds: [] }));
+      setError('');
       loadData();
     } else {
       const err = await res.json();
-      alert(err.error);
+      setError(err.error || 'Erro ao formar equipe');
     }
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingTeam) return;
+    setEditError('');
     const res = await fetch(`/api/equipes/${editingTeam.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -95,25 +100,27 @@ export function Equipes() {
     });
     if (res.ok) {
       setEditingTeam(null);
+      setEditError('');
       loadData();
     } else {
       const err = await res.json();
-      alert(err.error);
+      setEditError(err.error || 'Erro ao atualizar equipe');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir esta equipe (Soft Delete)? Todas as partidas associadas serão removidas logica e atomicamente.')) return;
+    setError('');
     try {
       const res = await fetch(`/api/equipes/${id}`, { method: 'DELETE' });
       if (res.ok) {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir equipe');
+        setError(err.error || 'Erro ao excluir equipe');
       }
     } catch (error) {
-      alert('Erro de conexão ao excluir equipe');
+      setError('Erro de conexão ao excluir equipe');
     }
   };
 
@@ -127,6 +134,7 @@ export function Equipes() {
 
   const startEdit = (e: Equipe) => {
     setEditingTeam(e);
+    setEditError('');
     setEditFormData({
       nome: e.nome,
       esporteId: e.esporteId,
@@ -159,6 +167,12 @@ export function Equipes() {
           <p className="text-slate-500 text-sm font-medium mt-1">Forme equipes para as modalidades disponíveis.</p>
         </div>
       </header>
+
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
 
       {/* Criar Nova Equipe */}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
@@ -288,6 +302,13 @@ export function Equipes() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Equipe</h2>
+
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
+
               <form onSubmit={handleEditSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div>

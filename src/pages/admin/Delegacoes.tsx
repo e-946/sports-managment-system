@@ -8,9 +8,11 @@ export function Delegacoes() {
   const [delegacoes, setDelegacoes] = useState<Delegacao[]>([]);
   const [nome, setNome] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const [editingDelegacao, setEditingDelegacao] = useState<Delegacao | null>(null);
   const [editNome, setEditNome] = useState('');
+  const [editError, setEditError] = useState('');
 
   const loadData = () => {
     fetch('/api/delegacoes')
@@ -33,6 +35,7 @@ export function Delegacoes() {
     e.preventDefault();
     if (!nome.trim()) return;
     setLoading(true);
+    setError('');
 
     try {
       const res = await fetch('/api/delegacoes', {
@@ -42,13 +45,13 @@ export function Delegacoes() {
       });
       if (!res.ok) {
          const err = await res.json();
-         alert(err.error || 'Erro ao cadastrar delegação');
+         setError(err.error || 'Erro ao cadastrar delegação');
          return;
       }
       setNome('');
       loadData();
-    } catch (error) {
-      alert('Erro de conexão ao cadastrar delegação');
+    } catch (err) {
+      setError('Erro de conexão ao cadastrar delegação');
     } finally {
       setLoading(false);
     }
@@ -57,6 +60,7 @@ export function Delegacoes() {
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingDelegacao || !editNome.trim()) return;
+    setEditError('');
 
     try {
       const res = await fetch(`/api/delegacoes/${editingDelegacao.id}`, {
@@ -69,25 +73,26 @@ export function Delegacoes() {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao atualizar delegação');
+        setEditError(err.error || 'Erro ao atualizar delegação');
       }
-    } catch (error) {
-      alert('Erro de conexão ao atualizar delegação');
+    } catch (err) {
+      setEditError('Erro de conexão ao atualizar delegação');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja realmente excluir esta delegação (Soft Delete)? Todos os participantes, equipes e usuários associados serão inativados logica e atomicamente.')) return;
+    setError('');
     try {
       const res = await fetch(`/api/delegacoes/${id}`, { method: 'DELETE' });
       if (res.ok) {
         loadData();
       } else {
         const err = await res.json();
-        alert(err.error || 'Erro ao excluir delegação');
+        setError(err.error || 'Erro ao excluir delegação');
       }
-    } catch (error) {
-      alert('Erro de conexão ao excluir delegação');
+    } catch (err) {
+      setError('Erro de conexão ao excluir delegação');
     }
   };
 
@@ -98,6 +103,7 @@ export function Delegacoes() {
   const startEdit = (d: Delegacao) => {
     setEditingDelegacao(d);
     setEditNome(d.nome);
+    setEditError('');
   };
 
   return (
@@ -108,6 +114,12 @@ export function Delegacoes() {
           <p className="text-slate-500 text-sm font-medium mt-1">Cadastre e gerencie as delegações do evento.</p>
         </div>
       </header>
+
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 animate-fadeIn">
+          {error}
+        </div>
+      )}
 
       {/* Cadastro de delegação */}
       {canEditOrDelete() && (
@@ -194,6 +206,11 @@ export function Delegacoes() {
             </button>
             <div className="p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Delegação</h2>
+              {editError && (
+                <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">
+                  {editError}
+                </div>
+              )}
               <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome da Delegação</label>
