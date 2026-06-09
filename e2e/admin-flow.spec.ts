@@ -1,9 +1,34 @@
 import { test, expect } from '@playwright/test';
 
+function generateValidCPF(): string {
+  const num = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (10 - i);
+  }
+  let d1 = (sum * 10) % 11;
+  if (d1 >= 10) d1 = 0;
+  
+  sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (11 - i);
+  }
+  sum += d1 * 2;
+  let d2 = (sum * 10) % 11;
+  if (d2 >= 10) d2 = 0;
+  
+  const cpf = [...num, d1, d2].join('');
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return generateValidCPF();
+  }
+  return cpf;
+}
+
 test.describe('Admin Geral Workflow Journey', () => {
   test('should create delegation, sport, participant, team, and log out successfully', async ({ page }) => {
     // Generate unique random CPF, sport name, team name, and unique date to prevent E2E collision
-    const randomCpf = Math.floor(10000000000 + Math.random() * 90000000000).toString();
+    const randomCpf = generateValidCPF();
     const randomSportName = `Basquete E2E ${Math.floor(Math.random() * 1000)}`;
     const randomTeamName = `Alemanha Gold ${Math.floor(Math.random() * 1000)}`;
     const randomDate = `2026-07-${String(10 + Math.floor(Math.random() * 18))}`;

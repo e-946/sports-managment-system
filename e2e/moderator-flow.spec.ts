@@ -1,9 +1,34 @@
 import { test, expect } from '@playwright/test';
 
+function generateValidCPF(): string {
+  const num = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (10 - i);
+  }
+  let d1 = (sum * 10) % 11;
+  if (d1 >= 10) d1 = 0;
+  
+  sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (11 - i);
+  }
+  sum += d1 * 2;
+  let d2 = (sum * 10) % 11;
+  if (d2 >= 10) d2 = 0;
+  
+  const cpf = [...num, d1, d2].join('');
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return generateValidCPF();
+  }
+  return cpf;
+}
+
 test.describe('Moderator Permission & Restrictive Flow', () => {
   test('should register a Moderator as Admin, log in as Moderator, and verify correct restrictions', async ({ page }) => {
     // Generate unique random CPF and delegation name
-    const randomCpf = Math.floor(10000000000 + Math.random() * 90000000000).toString();
+    const randomCpf = generateValidCPF();
     const randomDelegation = `Canadá ${Math.floor(Math.random() * 1000)}`;
 
     // Add console listeners

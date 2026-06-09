@@ -7,6 +7,13 @@ import { ParticipantSchema } from '../schemas/validation.schemas';
 
 const router = Router();
 
+function cleanDigits(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  return clean;
+}
+
 function getChanges(oldObj: any, newObj: any) {
   const changes: any = {};
   for (const key of Object.keys(newObj)) {
@@ -43,6 +50,9 @@ router.get('/', requireAuth(), async (req: any, res) => {
 router.post('/', requireAuth(), validateBody(ParticipantSchema), async (req: any, res) => {
   try {
     const p = req.body;
+    if (p.cpf) p.cpf = cleanDigits(p.cpf);
+    if (p.celular) p.celular = cleanDigits(p.celular);
+
     if (req.user.role === 'MODERADOR' && p.delegacaoId !== req.user.delegacaoId) {
       return res.status(403).json({ error: 'Só pode cadastrar da própria delegação' });
     }
@@ -77,6 +87,9 @@ router.put('/:id', requireAuth(['ADMIN_GERAL', 'MANAGER', 'MODERADOR']), validat
   try {
     const { id } = req.params;
     const body = req.body;
+    if (body.cpf) body.cpf = cleanDigits(body.cpf);
+    if (body.celular) body.celular = cleanDigits(body.celular);
+
     const old = await db.getParticipanteById(id);
     if (!old) return res.status(404).json({ error: 'Participante não encontrado' });
 

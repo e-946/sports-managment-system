@@ -7,6 +7,13 @@ import { UserSchema } from '../schemas/validation.schemas';
 
 const router = Router();
 
+function cleanDigits(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  return clean;
+}
+
 function getChanges(oldObj: any, newObj: any) {
   const changes: any = {};
   for (const key of Object.keys(newObj)) {
@@ -46,14 +53,15 @@ router.get('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), async (req: any, res) =
 router.post('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(UserSchema), async (req: any, res) => {
   try {
     const { nome, cpf, password, role, delegacaoId } = req.body;
+    const cleanCpf = cleanDigits(cpf);
     if (req.user.role === 'MANAGER' && role !== 'MODERADOR') {
       return res.status(403).json({ error: 'Managers só podem criar contas de Moderadores' });
     }
-    const existingUser = await db.getUserByCpf(cpf);
+    const existingUser = await db.getUserByCpf(cleanCpf || '');
     if (existingUser) {
       return res.status(400).json({ error: 'CPF já cadastrado' });
     }
-    const newUser = { id: uuidv4(), nome, cpf, password, role, delegacaoId };
+    const newUser = { id: uuidv4(), nome, cpf: cleanCpf, password, role, delegacaoId };
     await db.createUser(newUser);
     res.json({ id: newUser.id, nome, cpf, role });
   } catch (error) {

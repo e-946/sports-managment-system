@@ -1,9 +1,44 @@
 import { test, expect } from '@playwright/test';
 
+function formatCPF(value: string): string {
+  if (!value) return '';
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 6) return `${clean.slice(0, 3)}.${clean.slice(3)}`;
+  if (clean.length <= 9) return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6)}`;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9, 11)}`;
+}
+
+function generateValidCPF(): string {
+  const num = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (10 - i);
+  }
+  let d1 = (sum * 10) % 11;
+  if (d1 >= 10) d1 = 0;
+  
+  sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += num[i] * (11 - i);
+  }
+  sum += d1 * 2;
+  let d2 = (sum * 10) % 11;
+  if (d2 >= 10) d2 = 0;
+  
+  const cpf = [...num, d1, d2].join('');
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return generateValidCPF();
+  }
+  return cpf;
+}
+
 test.describe('Manager Creation & Navigation Flow', () => {
   test('should create a Manager user as Admin, log in as Manager, and verify correct view access', async ({ page }) => {
     // Generate unique random CPF to prevent test collisions
-    const randomCpf = Math.floor(10000000000 + Math.random() * 90000000000).toString();
+    const randomCpf = generateValidCPF();
 
     // Add console listeners
     page.on('console', msg => console.log('MANAGER-FLOW BROWSER CONSOLE:', msg.text()));
@@ -41,7 +76,7 @@ test.describe('Manager Creation & Navigation Flow', () => {
 
     // 4. Verify that the table lists our new Manager
     await expect(page.locator('table')).toContainText('Gerente Geral E2E');
-    await expect(page.locator('table')).toContainText(randomCpf);
+    await expect(page.locator('table')).toContainText(formatCPF(randomCpf));
 
     // Log out Admin
     await page.click('button:has-text("Sair")');

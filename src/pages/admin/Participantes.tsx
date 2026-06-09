@@ -3,6 +3,24 @@ import { useAuth } from '../../context/AuthContext';
 import { Participante, Delegacao } from '../../types';
 import { Users, Plus, Download, Edit2, Trash2, X } from 'lucide-react';
 
+export function formatCelular(value: string): string {
+  const clean = value.replace(/\D/g, '');
+  if (clean.length === 0) return '';
+  if (clean.length <= 2) return `(${clean}`;
+  if (clean.length <= 7) return `(${clean.slice(0, 2)}) ${clean.slice(2)}`;
+  return `(${clean.slice(0, 2)}) ${clean.slice(2, 7)}-${clean.slice(7, 11)}`;
+}
+
+export function formatCPF(value: string): string {
+  if (!value) return '';
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 6) return `${clean.slice(0, 3)}.${clean.slice(3)}`;
+  if (clean.length <= 9) return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6)}`;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9, 11)}`;
+}
+
 export function Participantes() {
   const { user } = useAuth();
   const [participantes, setParticipantes] = useState<Participante[]>([]);
@@ -158,10 +176,10 @@ export function Participantes() {
     setEditFormData({
       nomeCompleto: p.nomeCompleto,
       nomeAbreviado: p.nomeAbreviado,
-      cpf: p.cpf,
+      cpf: formatCPF(p.cpf || ''),
       dataNascimento: p.dataNascimento,
       sexo: p.sexo as any,
-      celular: p.celular,
+      celular: formatCelular(p.celular || ''),
       tipo: p.tipo as any,
       delegacaoId: p.delegacaoId || ''
     });
@@ -219,7 +237,7 @@ export function Participantes() {
           <div className="text-sm">
              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CPF</label>
              <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-                value={formData.cpf} onChange={e => setFormData({...formData, cpf: e.target.value})} />
+                value={formData.cpf} onChange={e => setFormData({...formData, cpf: formatCPF(e.target.value)})} />
           </div>
           <div className="text-sm">
              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Data Nascimento</label>
@@ -237,7 +255,7 @@ export function Participantes() {
           <div className="text-sm">
              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Celular</label>
              <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-                value={formData.celular} onChange={e => setFormData({...formData, celular: e.target.value})} />
+                value={formData.celular} onChange={e => setFormData({...formData, celular: formatCelular(e.target.value)})} />
           </div>
           <div className="text-sm">
              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Tipo Usuário</label>
@@ -289,7 +307,7 @@ export function Participantes() {
                 <tr key={part.id || `part-${idx}`} className="hover:bg-slate-50/80 transition-colors">
                   <td className="px-8 py-5 text-sm font-medium">
                     <div className="font-bold text-slate-700">{part.nomeAbreviado}</div>
-                    <div className="text-slate-400 text-xs mt-1 font-mono">{part.cpf}</div>
+                    <div className="text-slate-400 text-xs mt-1 font-mono">{formatCPF(part.cpf)}</div>
                   </td>
                   <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium bg-slate-50/30">{part.delegacaoNome}</td>
                   <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium">{part.idade} anos</td>
@@ -350,7 +368,7 @@ export function Participantes() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CPF</label>
                   <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                    value={editFormData.cpf} onChange={e => setEditFormData({...editFormData, cpf: e.target.value})} />
+                    value={editFormData.cpf} onChange={e => setEditFormData({...editFormData, cpf: formatCPF(e.target.value)})} />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Data Nascimento</label>
@@ -368,7 +386,7 @@ export function Participantes() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Celular</label>
                   <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                    value={editFormData.celular} onChange={e => setEditFormData({...editFormData, celular: e.target.value})} />
+                    value={editFormData.celular} onChange={e => setEditFormData({...editFormData, celular: formatCelular(e.target.value)})} />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Tipo Usuário</label>

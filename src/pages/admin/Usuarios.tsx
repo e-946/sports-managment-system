@@ -3,6 +3,16 @@ import { UserPlus, Trash2, Edit2, X } from 'lucide-react';
 import { Delegacao } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 
+export function formatCPF(value: string): string {
+  if (!value) return '';
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 6) return `${clean.slice(0, 3)}.${clean.slice(3)}`;
+  if (clean.length <= 9) return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6)}`;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9, 11)}`;
+}
+
 interface UserRow {
   id: string;
   nome: string;
@@ -153,7 +163,7 @@ export function Usuarios() {
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CPF</label>
             <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-               value={formData.cpf} onChange={e => setFormData({...formData, cpf: e.target.value})} />
+               value={formData.cpf} onChange={e => setFormData({...formData, cpf: formatCPF(e.target.value)})} />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Senha</label>
@@ -203,7 +213,7 @@ export function Usuarios() {
                 {usuarios.map((u, idx) => (
                    <tr key={u.id || `u-${idx}`} className="hover:bg-slate-50/80 transition-colors">
                      <td className="px-8 py-5 whitespace-nowrap text-sm font-bold text-slate-700">{u.nome}</td>
-                     <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">{u.cpf}</td>
+                     <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">{formatCPF(u.cpf)}</td>
                      <td className="px-8 py-5 whitespace-nowrap text-sm text-indigo-600 font-bold">{u.role}</td>
                      <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium bg-slate-50/30">{u.delegacaoNome}</td>
                      <td className="px-8 py-5 whitespace-nowrap text-sm text-right flex items-center justify-end gap-2">

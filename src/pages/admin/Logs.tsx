@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { Search, Activity, Trash2, ArrowRight, Eye, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 
+export function formatCPF(value: string): string {
+  if (!value) return '';
+  const clean = value.replace(/\D/g, '');
+  if (clean.length <= 4) return value;
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 6) return `${clean.slice(0, 3)}.${clean.slice(3)}`;
+  if (clean.length <= 9) return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6)}`;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9, 11)}`;
+}
+
 export function Logs() {
   const [activeTab, setActiveTab] = useState<'updates' | 'deletes'>('updates');
   const [search, setSearch] = useState('');
@@ -134,7 +144,7 @@ export function Logs() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="text-slate-800 text-sm font-semibold">{log.usuarioNome}</span>
-                        <span className="text-xs text-slate-500">CPF: {log.usuarioCpf}</span>
+                        <span className="text-xs text-slate-500">CPF: {formatCPF(log.usuarioCpf)}</span>
                       </div>
                     </td>
                     {activeTab === 'updates' && (
