@@ -21,22 +21,22 @@ export function AdminLayout() {
     }
     setPasswordError('');
     try {
-       const res = await fetch('/api/me/password', {
-         method: 'PUT',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ currentPassword, newPassword })
-       });
-       if (res.ok) {
-         setShowPasswordModal(false);
-         setCurrentPassword('');
-         setNewPassword('');
-         setConfirmPassword('');
-         alert('Senha atualizada com sucesso!');
-       } else {
-         const data = await res.json();
-         setPasswordError(data.error || 'Erro ao atualizar senha');
-       }
-    } catch(err) {
+      const res = await fetch('/api/me/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      if (res.ok) {
+        setShowPasswordModal(false);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        alert('Senha atualizada com sucesso!');
+      } else {
+        const data = await res.json();
+        setPasswordError(data.error || 'Erro ao atualizar senha');
+      }
+    } catch (err) {
       setPasswordError('Erro de conexão ao atualizar senha');
     }
   };
@@ -69,7 +69,7 @@ export function AdminLayout() {
           </div>
           <span className="text-xl font-semibold tracking-tight">Gestão</span>
         </div>
-          
+
         <nav className="space-y-3 flex-1">
           {links.map((link) => {
             const Icon = link.icon;
@@ -80,8 +80,8 @@ export function AdminLayout() {
                 to={link.to}
                 className={cn(
                   "flex items-center gap-3 p-3 rounded-xl transition-colors text-sm",
-                  matches 
-                    ? "bg-white/10 border border-white/10 text-white font-medium" 
+                  matches
+                    ? "bg-white/10 border border-white/10 text-white font-medium"
                     : "text-slate-400 hover:text-slate-200"
                 )}
               >
@@ -96,17 +96,17 @@ export function AdminLayout() {
           <div className="p-4 bg-indigo-600 rounded-2xl text-center text-xs font-medium relative overflow-hidden">
             <div className="relative z-10">
               <div className="truncate mb-2 text-indigo-100 font-bold">
-                 Olá, {user?.nome?.split(' ')[0]} <br/> 
-                 <span className="font-normal opacity-75">({user?.role === 'ADMIN_GERAL' ? 'Admin Geral' : user?.role === 'MANAGER' ? 'Manager' : 'Moderador'})</span>
+                Olá, {user?.nome?.split(' ')[0]} <br />
+                <span className="font-normal opacity-75">({user?.role === 'ADMIN_GERAL' ? 'Admin Geral' : user?.role === 'MANAGER' ? 'Manager' : 'Moderador'})</span>
               </div>
-              <button 
+              <button
                 onClick={() => setShowPasswordModal(true)}
                 className="w-full inline-flex items-center justify-center rounded-lg text-sm font-bold transition-colors focus-visible:outline-none h-8 px-3 hover:bg-indigo-700 bg-indigo-800 text-indigo-50 gap-2 shadow-inner border border-indigo-500/20 mb-2"
               >
                 <KeyRound className="w-3 h-3" />
                 Trocar Senha
               </button>
-              <button 
+              <button
                 onClick={logout}
                 className="w-full inline-flex items-center justify-center rounded-lg text-sm font-bold transition-colors focus-visible:outline-none h-8 px-3 hover:bg-indigo-700 bg-indigo-800 text-indigo-50 gap-2 shadow-inner border border-indigo-500/20"
               >
@@ -122,30 +122,34 @@ export function AdminLayout() {
 
       <main className="flex-1 flex flex-col gap-6 min-w-0">
         <header className="flex items-center justify-between md:hidden bg-slate-900 text-white p-4 rounded-3xl shadow-lg">
-           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold">
-               <Trophy className="w-4 h-4 text-white" />
-             </div>
-             <h1 className="text-lg font-semibold tracking-tight">Gestão</h1>
-           </div>
-           <div className="flex gap-2">
-             <button onClick={() => setShowPasswordModal(true)} className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
-               <KeyRound className="w-5 h-5 text-indigo-100"/>
-             </button>
-             <button onClick={logout} className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
-               <LogOut className="w-5 h-5 text-indigo-100"/>
-             </button>
-           </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold">
+              <Trophy className="w-4 h-4 text-white" />
+            </div>
+            <h1 className="text-lg font-semibold tracking-tight">Gestão</h1>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => setShowPasswordModal(true)} className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+              <KeyRound className="w-5 h-5 text-indigo-100" />
+            </button>
+            <button onClick={logout} className="p-2 bg-white/10 rounded-xl hover:bg-white/20 transition-colors">
+              <LogOut className="w-5 h-5 text-indigo-100" />
+            </button>
+          </div>
         </header>
 
         <Outlet />
       </main>
 
+      <footer className="w-full max-w-7xl mx-auto text-center text-sm font-medium text-slate-400 pb-4">
+        Sistema de Gestão Esportiva &copy; feito pela <a target="_blank" href="https://www.instagram.com/e946consultoria/">e-946</a> {new Date().getFullYear()}
+      </footer>
+
       {/* Password Update Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden relative">
-            <button 
+            <button
               onClick={() => setShowPasswordModal(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition"
             >
@@ -153,39 +157,39 @@ export function AdminLayout() {
             </button>
             <div className="p-8">
               <div className="flex items-center gap-3 mb-6">
-                 <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center">
-                   <KeyRound className="w-5 h-5" />
-                 </div>
-                 <h2 className="text-xl font-bold text-slate-800">Trocar Senha</h2>
+                <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center">
+                  <KeyRound className="w-5 h-5" />
+                </div>
+                <h2 className="text-xl font-bold text-slate-800">Trocar Senha</h2>
               </div>
-              
+
               {passwordError && (
                 <div className="p-3 mb-6 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
-                   {passwordError}
+                  {passwordError}
                 </div>
               )}
 
               <form onSubmit={handlePasswordUpdate} className="space-y-4">
-                 <div>
-                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Senha Atual</label>
-                   <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                     value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nova Senha</label>
-                   <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                     value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                 </div>
-                 <div>
-                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Confirmar Nova Senha</label>
-                   <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                     value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-                 </div>
-                 <div className="pt-4">
-                   <button type="submit" className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl font-bold hover:bg-indigo-700 flex items-center justify-center gap-2 transition-all shadow-md shadow-indigo-200">
-                     Atualizar Senha
-                   </button>
-                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Senha Atual</label>
+                  <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+                    value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nova Senha</label>
+                  <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+                    value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Confirmar Nova Senha</label>
+                  <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+                    value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                </div>
+                <div className="pt-4">
+                  <button type="submit" className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl font-bold hover:bg-indigo-700 flex items-center justify-center gap-2 transition-all shadow-md shadow-indigo-200">
+                    Atualizar Senha
+                  </button>
+                </div>
               </form>
             </div>
           </div>

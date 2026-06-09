@@ -19,17 +19,17 @@ export function PublicLayout() {
           </div>
           <h1 className="text-xl font-bold tracking-tight hidden sm:block">Jogos Esportivos</h1>
         </div>
-          
+
         <nav className="flex items-center gap-2 sm:gap-6">
-          <Link 
-            to="/partidas" 
+          <Link
+            to="/partidas"
             className={cn("px-4 py-2 rounded-full text-sm font-semibold transition-colors flex items-center gap-2", location.pathname === '/partidas' ? "bg-white/10 border border-white/10" : "text-slate-400 hover:text-white hover:bg-white/5")}
           >
             {location.pathname === '/partidas' && <span className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>}
             Partidas
           </Link>
-          <Link 
-            to="/ranking" 
+          <Link
+            to="/ranking"
             className={cn("px-4 py-2 rounded-full text-sm font-semibold transition-colors flex items-center gap-2", location.pathname === '/ranking' ? "bg-white/10 border border-white/10" : "text-slate-400 hover:text-white hover:bg-white/5")}
           >
             {location.pathname === '/ranking' && <span className="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>}
@@ -45,13 +45,13 @@ export function PublicLayout() {
           </Link>
         </div>
       </header>
-      
+
       <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col gap-6">
         <Outlet />
       </main>
 
       <footer className="w-full max-w-7xl mx-auto text-center text-sm font-medium text-slate-400 pb-4">
-        Sistema de Gestão Esportiva &copy; {new Date().getFullYear()}
+        Sistema de Gestão Esportiva &copy; feito pela <a target="_blank" href="https://www.instagram.com/e946consultoria/">e-946</a> {new Date().getFullYear()}
       </footer>
     </div>
   );
