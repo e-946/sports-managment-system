@@ -139,11 +139,11 @@ export function AdminLayout() {
         </header>
 
         <Outlet />
-      </main>
 
-      <footer className="w-full max-w-7xl mx-auto text-center text-sm font-medium text-slate-400 pb-4">
-        Sistema de Gestão Esportiva &copy; feito pela <a target="_blank" href="https://www.instagram.com/e946consultoria/">e-946</a> {new Date().getFullYear()}
-      </footer>
+        <footer className="mt-auto text-center text-sm font-medium text-slate-400 pb-4">
+          Sistema de Gestão Esportiva &copy; feito pela <a className="cursor-pointer text-indigo-600 hover:text-indigo-500" target="_blank" href="https://www.instagram.com/e946consultoria/">e-946</a> {new Date().getFullYear()}
+        </footer>
+      </main>
 
       {/* Password Update Modal */}
       {showPasswordModal && (

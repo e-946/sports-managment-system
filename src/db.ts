@@ -36,7 +36,8 @@ export const initDb = async () => {
   // Seed default admin (Assumes tables are created by migrations beforehand)
   const existingAdmin = await pool.query('SELECT * FROM users WHERE cpf = $1 AND deleted_at IS NULL', ['admin']);
   if (existingAdmin.rows.length === 0) {
-    const hashedPassword = await bcrypt.hash('admin', 10);
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin';
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
     await pool.query(
       'INSERT INTO users (id, nome, cpf, password, role) VALUES ($1, $2, $3, $4, $5)',
       ['1', 'Admin Geral', 'admin', hashedPassword, 'ADMIN_GERAL']
