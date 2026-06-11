@@ -7,10 +7,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: builder
-    env_file:
-      - .env
     environment:
-      - NODE_ENV=test
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/gestao_esportiva}
+      - NODE_ENV=${NODE_ENV:-test}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
     command: npm run test
 
   # Service to execute Playwright E2E browser tests against the running application
@@ -19,10 +20,8 @@ services:
     volumes:
       - .:/work
     working_dir: /work
-    env_file:
-      - .env
     environment:
-      - PLAYWRIGHT_TEST_BASE_URL=http://web:3000
+      - PLAYWRIGHT_TEST_BASE_URL=${PLAYWRIGHT_TEST_BASE_URL:-http://web:3000}
     depends_on:
       - web
     command: >

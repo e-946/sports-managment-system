@@ -6,11 +6,11 @@ services:
       target: builder
     ports:
       - "3000:3000"
-    env_file:
-      - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-gestao_esportiva}
-      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/gestao_esportiva}
+      - NODE_ENV=${NODE_ENV:-development}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
     volumes:
       - .:/app
       - /app/node_modules
@@ -24,8 +24,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    env_file:
-      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
