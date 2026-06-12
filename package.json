@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node-pg-migrate up && tsx watch server.ts",
+    "dev": "node --env-file=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js up && tsx --env-file=.env watch server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node-pg-migrate up && node dist/server.cjs",
     "migrate": "node-pg-migrate up",
@@ -21,7 +21,6 @@
     "clsx": "^2.1.1",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.2.1",
-    "dotenv": "^17.2.3",
     "express": "^4.22.2",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.546.0",
