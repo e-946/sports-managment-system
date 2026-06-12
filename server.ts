@@ -55,7 +55,8 @@ if (process.env.NODE_ENV !== 'test') {
 
     // Vite middleware for development or Static File Serving for Production
     if (process.env.NODE_ENV !== "production" && process.env.NODE_ENV !== "test") {
-      const { createServer: createViteServer } = await import('vite');
+      const viteModule = 'vite';
+      const { createServer: createViteServer } = await import(viteModule);
       const vite = await createViteServer({
         server: { middlewareMode: true },
         appType: "spa",

@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/gestao_esportiva}
-      - NODE_ENV=${NODE_ENV:-production}
+      - NODE_ENV=production
       - JWT_SECRET=${JWT_SECRET}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
     depends_on:
