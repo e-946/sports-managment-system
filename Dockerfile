@@ -22,5 +22,4 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Run database migrations first, then start the Express server
-CMD ["sh", "-c", "echo \"DATABASE_URL completa: $DATABASE_URL\" && npx node-pg-migrate up && node dist/server.cjs"]
-
+CMD ["sh", "-c", "npx node-pg-migrate up && node dist/server.cjs"]
