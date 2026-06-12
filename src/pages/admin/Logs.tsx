@@ -82,7 +82,7 @@ export function Logs() {
           }`}
         >
           <Activity className="w-4 h-4" />
-          Atualizações (Updates)
+          Atualizações
         </button>
         <button
           onClick={() => { setActiveTab('deletes'); setSelectedChanges(null); }}
@@ -93,7 +93,7 @@ export function Logs() {
           }`}
         >
           <Trash2 className="w-4 h-4" />
-          Exclusões (Deletes)
+          Exclusões
         </button>
       </div>
 

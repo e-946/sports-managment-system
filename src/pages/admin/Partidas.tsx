@@ -107,7 +107,7 @@ export function Partidas() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir esta partida (Soft Delete)?')) return;
+    if (!confirm('Deseja realmente excluir esta partida (Exclusão Lógica)?')) return;
     setError('');
     try {
       const res = await fetch(`/api/partidas/${id}`, { method: 'DELETE' });

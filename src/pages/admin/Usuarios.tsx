@@ -105,7 +105,7 @@ export function Usuarios() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir este usuário (Soft Delete)?')) return;
+    if (!confirm('Deseja realmente excluir este usuário (Exclusão Lógica)?')) return;
     setError('');
     try {
       const res = await fetch(`/api/usuarios/${id}`, { method: 'DELETE' });
@@ -174,7 +174,7 @@ export function Usuarios() {
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Papel (Role)</label>
             <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
               value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}>
-               {user?.role === 'ADMIN_GERAL' && <option value="MANAGER">Manager</option>}
+               {user?.role === 'ADMIN_GERAL' && <option value="MANAGER">Gerente</option>}
                <option value="MODERADOR">Moderador</option>
                {user?.role === 'ADMIN_GERAL' && <option value="ADMIN_GERAL">Admin Geral</option>}
             </select>
@@ -263,7 +263,7 @@ export function Usuarios() {
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Papel (Role)</label>
                   <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
                     value={editFormData.role} onChange={e => setEditFormData({...editFormData, role: e.target.value})}>
-                     <option value="MANAGER">Manager</option>
+                     <option value="MANAGER">Gerente</option>
                      <option value="MODERADOR">Moderador</option>
                      <option value="ADMIN_GERAL">Admin Geral</option>
                   </select>

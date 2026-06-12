@@ -109,7 +109,7 @@ export function Equipes() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir esta equipe (Soft Delete)? Todas as partidas associadas serão removidas logica e atomicamente.')) return;
+    if (!confirm('Deseja realmente excluir esta equipe (Exclusão Lógica)? Todas as partidas associadas serão removidas logica e atomicamente.')) return;
     setError('');
     try {
       const res = await fetch(`/api/equipes/${id}`, { method: 'DELETE' });

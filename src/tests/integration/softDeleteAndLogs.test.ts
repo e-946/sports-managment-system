@@ -29,7 +29,7 @@ describe('Soft Delete and Audit Logs Integration Tests', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    mockQuery.mockReset();
     app = await createServer();
   });
 

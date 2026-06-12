@@ -97,7 +97,7 @@ export function AdminLayout() {
             <div className="relative z-10">
               <div className="truncate mb-2 text-indigo-100 font-bold">
                 Olá, {user?.nome?.split(' ')[0]} <br />
-                <span className="font-normal opacity-75">({user?.role === 'ADMIN_GERAL' ? 'Admin Geral' : user?.role === 'MANAGER' ? 'Manager' : 'Moderador'})</span>
+                <span className="font-normal opacity-75">({user?.role === 'ADMIN_GERAL' ? 'Admin Geral' : user?.role === 'MANAGER' ? 'Gerente' : 'Moderador'})</span>
               </div>
               <button
                 onClick={() => setShowPasswordModal(true)}

@@ -81,7 +81,7 @@ export function Delegacoes() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir esta delegação (Soft Delete)? Todos os participantes, equipes e usuários associados serão inativados logica e atomicamente.')) return;
+    if (!confirm('Deseja realmente excluir esta delegação (Exclusão Lógica)? Todos os participantes, equipes e usuários associados serão inativados logica e atomicamente.')) return;
     setError('');
     try {
       const res = await fetch(`/api/delegacoes/${id}`, { method: 'DELETE' });

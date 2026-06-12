@@ -31,7 +31,7 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    mockQuery.mockReset();
     // Recreate a clean app instance for each test
     app = await createServer();
   });
@@ -365,7 +365,7 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
         const res = await request(app)
           .post('/api/participantes')
           .set('Cookie', [`token=${token}`])
-          .send({ nomeCompleto: 'Moderador Delegação', cpf: '33333333333', tipo: 'MODERADOR', delegacaoId: 'del-1' });
+          .send({ nomeCompleto: 'Moderador Delegação', cpf: '11144477735', tipo: 'MODERADOR', delegacaoId: 'del-1' });
 
         expect(res.status).toBe(200);
         expect(res.body.nomeCompleto).toBe('Moderador Delegação');

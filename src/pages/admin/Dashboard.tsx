@@ -40,17 +40,17 @@ export function AdminDashboard() {
     <div className="flex flex-col gap-6 flex-1 h-full">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">System Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard do Sistema</h1>
           <p className="text-slate-500 text-sm font-medium">
             {user?.role === 'MODERADOR' 
-              ? `Overview of your account and system permissions for delegação: ${userDelegacaoNome}.` 
-              : 'Overview of your account and system permissions.'}
+              ? `Visão geral da sua conta e permissões do sistema para a delegação: ${userDelegacaoNome}.` 
+              : 'Visão geral da sua conta e permissões do sistema.'}
           </p>
         </div>
         <div className="hidden sm:flex gap-3">
           <div className="bg-white px-4 py-2 rounded-full border border-slate-200 text-xs font-bold flex items-center gap-2 text-slate-700 shadow-sm">
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-            SYS: ONLINE
+            SISTEMA: ONLINE
           </div>
         </div>
       </header>

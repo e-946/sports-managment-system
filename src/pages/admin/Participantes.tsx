@@ -144,7 +144,7 @@ export function Participantes() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir este participante (Soft Delete)? Todas as associações de equipes serão removidas.')) return;
+    if (!confirm('Deseja realmente excluir este participante (Exclusão Lógica)? Todas as associações de equipes serão removidas.')) return;
     setError('');
     try {
       const res = await fetch(`/api/participantes/${id}`, { method: 'DELETE' });

@@ -80,7 +80,7 @@ export function Esportes() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente excluir este esporte (Soft Delete)? Todas as equipes e partidas associadas serão removidas logica e atomicamente.')) return;
+    if (!confirm('Deseja realmente excluir este esporte (Exclusão Lógica)? Todas as equipes e partidas associadas serão removidas logica e atomicamente.')) return;
     setError('');
     try {
       const res = await fetch(`/api/esportes/${id}`, { method: 'DELETE' });
