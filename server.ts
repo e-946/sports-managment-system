@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 
 import { initDb } from './src/db';
 import authRouter from './src/routes/auth.routes';
@@ -14,8 +13,6 @@ import partidasRouter from './src/routes/partidas.routes';
 import usuariosRouter from './src/routes/usuarios.routes';
 import publicRouter from './src/routes/public.routes';
 import logsRouter from './src/routes/logs.routes';
-
-dotenv.config();
 
 export async function createServer() {
   const app = express();
@@ -47,7 +44,7 @@ export async function createServer() {
 if (process.env.NODE_ENV !== 'test') {
   createServer().then(async (app) => {
     const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
-    
+
     // Database schema execution and seeding verify
     try {
       await initDb();

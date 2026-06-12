@@ -1,9 +1,6 @@
 import pg from 'pg';
-import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-
-dotenv.config();
 
 const { Pool } = pg;
 export const JWT_SECRET = process.env.JWT_SECRET;
@@ -221,7 +218,7 @@ export const db = {
       await client.query('UPDATE users SET deleted_at = NOW() WHERE delegacao_id = $1 AND deleted_at IS NULL', [id]);
       await client.query('UPDATE participantes SET deleted_at = NOW() WHERE delegacao_id = $1 AND deleted_at IS NULL', [id]);
       await client.query('UPDATE equipes SET deleted_at = NOW() WHERE delegacao_id = $1 AND deleted_at IS NULL', [id]);
-      
+
       const logId = uuidv4();
       await client.query(
         'INSERT INTO log_deletes (id, tipo_entidade, entidade_id, usuario_id) VALUES ($1, $2, $3, $4)',
@@ -283,7 +280,7 @@ export const db = {
       await client.query('UPDATE esportes SET deleted_at = NOW() WHERE id = $1', [id]);
       await client.query('UPDATE equipes SET deleted_at = NOW() WHERE esporte_id = $1 AND deleted_at IS NULL', [id]);
       await client.query('UPDATE partidas SET deleted_at = NOW() WHERE esporte_id = $1 AND deleted_at IS NULL', [id]);
-      
+
       const logId = uuidv4();
       await client.query(
         'INSERT INTO log_deletes (id, tipo_entidade, entidade_id, usuario_id) VALUES ($1, $2, $3, $4)',
@@ -369,7 +366,7 @@ export const db = {
       await client.query('BEGIN');
       await client.query('UPDATE participantes SET deleted_at = NOW() WHERE id = $1', [id]);
       await client.query('DELETE FROM equipe_participantes WHERE participante_id = $1', [id]);
-      
+
       const logId = uuidv4();
       await client.query(
         'INSERT INTO log_deletes (id, tipo_entidade, entidade_id, usuario_id) VALUES ($1, $2, $3, $4)',
@@ -487,7 +484,7 @@ export const db = {
       await client.query('BEGIN');
       await client.query('UPDATE equipes SET deleted_at = NOW() WHERE id = $1', [id]);
       await client.query('UPDATE partidas SET deleted_at = NOW() WHERE (equipe1_id = $1 OR equipe2_id = $1) AND deleted_at IS NULL', [id]);
-      
+
       const logId = uuidv4();
       await client.query(
         'INSERT INTO log_deletes (id, tipo_entidade, entidade_id, usuario_id) VALUES ($1, $2, $3, $4)',
