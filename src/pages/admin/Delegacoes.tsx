@@ -197,14 +197,14 @@ export function Delegacoes() {
       {/* Edit Modal */}
       {editingDelegacao && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden relative">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md flex flex-col max-h-[90vh] relative">
             <button 
               onClick={() => setEditingDelegacao(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition"
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition z-10"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="p-8">
+            <div className="p-8 overflow-y-auto">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Delegação</h2>
               {editError && (
                 <div className="p-4 bg-red-50 text-red-700 font-bold rounded-2xl text-sm border border-red-100 mb-6 animate-fadeIn">

@@ -293,14 +293,14 @@ export function Equipes() {
       {/* Edit Modal */}
       {editingTeam && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-xl w-full max-w-4xl overflow-hidden relative">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-4xl flex flex-col max-h-[90vh] relative">
             <button 
               onClick={() => setEditingTeam(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition"
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition z-10"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="p-8">
+            <div className="p-8 overflow-y-auto">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Editar Equipe</h2>
 
               {editError && (
