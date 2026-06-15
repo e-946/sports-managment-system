@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Validação**: Inserida regra de negócio na seleção de participantes e formação de equipes, bloqueando o cadastro de membros com sexo divergente da categoria exigida pelo esporte selecionado (exeto para esportes de categoria 'Misto').
 - **API**: Rota de healthcheck (`GET /api/health`) implementada no backend.
 - **Infraestrutura**: Configuração de verificação de integridade (`healthcheck`) nos serviços `web` e `web-dev` no Docker Compose, otimizados para contêineres Alpine usando `wget`.
 - **Testes Unitários**: Criada cobertura de testes para os componentes de interface de `Partidas` e `Delegacoes` no React.
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Testes E2E**: Script `partidas-crud.spec.ts` introduzido no Playwright para validar a tela de gerenciamento de partidas e formulários sob o cargo de Admin.
 
 ### Changed
+- **UI/UX**: O layout de listagem de Equipes (tabela genérica) foi substituído por um modelo de "cards" (grade responsiva). A visualização agora agrupa e ordena as equipes hierarquicamente pelo Esporte e sua respectiva Categoria, incluindo uma lista nominal legível dos atletas dentro de cada equipe.
 - **Segurança**: Aplicado um bloqueio de segurança na rota de usuários; qualquer tentativa de edição (PUT) ou deleção (DELETE) na conta do Admin root (ID `'1'`) é estritamente bloqueada com erro de autorização.
 - **UI/UX**: Modais da área administrativa (`Usuarios`, `Equipes`, `Esportes`, `Participantes`, `Delegacoes`, `Partidas`) receberam ajustes de CSS (`max-h-[90vh]` e `overflow-y-auto`). Agora é possível realizar a rolagem interna do formulário em dispositivos menores sem quebrar a janela.
 
