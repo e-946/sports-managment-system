@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import { requireAuth } from '../middlewares/auth';
 import { validateBody } from '../middlewares/validation';
-import { UserSchema } from '../schemas/validation.schemas';
+import { UserSchema, UpdateUserSchema } from '../schemas/validation.schemas';
 
 const router = Router();
 
@@ -69,7 +69,7 @@ router.post('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(UserSchem
   }
 });
 
-router.put('/:id', requireAuth(['ADMIN_GERAL']), validateBody(UserSchema), async (req: any, res) => {
+router.put('/:id', requireAuth(['ADMIN_GERAL']), validateBody(UpdateUserSchema), async (req: any, res) => {
   try {
     const { id } = req.params;
     const body = req.body;

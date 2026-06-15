@@ -82,4 +82,52 @@ describe('Usuarios Component', () => {
     const trashButtons = container.querySelectorAll('button.hover\\:text-red-600');
     expect(trashButtons).toHaveLength(1);
   });
+
+  it('allows editing a user without cpf in the payload', async () => {
+    mockUser = { id: 'admin-1', role: 'ADMIN_GERAL' };
+
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [
+          { id: 'user-1', nome: 'User One', cpf: '12345678901', role: 'MANAGER', delegacaoNome: '-' }
+        ]
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => [] }); // delegacoes
+
+    const { container } = render(<Usuarios />);
+
+    await waitFor(() => {
+      expect(screen.getByText('User One')).toBeInTheDocument();
+    });
+
+    // Mock the PUT request
+    (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ({}) });
+    // Mock the subsequent GET requests after reload
+    (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => [] });
+    (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => [] });
+
+    // Click edit button
+    const editButton = container.querySelector('button.hover\\:text-indigo-600');
+    expect(editButton).toBeInTheDocument();
+    fireEvent.click(editButton!);
+
+    await waitFor(() => {
+      expect(screen.getByText('Editar Usuário')).toBeInTheDocument();
+    });
+
+    const submitButton = screen.getByText('Salvar Alterações');
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/usuarios/user-1', expect.objectContaining({
+        method: 'PUT',
+        body: JSON.stringify({
+          nome: 'User One',
+          role: 'MANAGER',
+          delegacaoId: ''
+        })
+      }));
+    });
+  });
 });

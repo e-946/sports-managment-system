@@ -44,6 +44,14 @@ export const UserSchema = z.object({
   delegacaoId: z.string().optional().nullable().or(z.literal(''))
 });
 
+export const UpdateUserSchema = z.object({
+  nome: z.string().optional().nullable(),
+  cpf: z.string().refine(val => !val || isValidCPF(val), 'CPF inválido').optional().nullable(),
+  password: z.string().optional().nullable(),
+  role: z.enum(['ADMIN_GERAL', 'MANAGER', 'MODERADOR', 'PARTICIPANTE']).optional().nullable(),
+  delegacaoId: z.string().optional().nullable().or(z.literal(''))
+});
+
 export const SportSchema = z.object({
   nome: z.string().optional().nullable(),
   categoria: z.enum(['MASCULINO', 'FEMININO', 'MISTO']).optional().nullable(),
