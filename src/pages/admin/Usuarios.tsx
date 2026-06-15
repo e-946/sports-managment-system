@@ -83,7 +83,7 @@ export function Usuarios() {
         role: editFormData.role,
         delegacaoId: editFormData.role === 'MODERADOR' ? editFormData.delegacaoId : ''
       };
-      if (editFormData.password) {
+      if (editFormData.password !== '' || editFormData.password !== null) {
         payload.password = editFormData.password;
       }
 
