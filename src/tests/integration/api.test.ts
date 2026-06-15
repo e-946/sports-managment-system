@@ -404,6 +404,39 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
         expect(res.status).toBe(200);
         expect(res.body.placar1).toBe(3);
       });
+
+      it('converts empty strings to null for draw matches (empate)', async () => {
+        const token = generateToken('manager-1', 'MANAGER');
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ id: 'manager-1', role: 'MANAGER' }]
+        });
+        
+        let insertQueryArgs: any[] = [];
+        mockQuery.mockImplementationOnce(async (queryText, values) => {
+           insertQueryArgs = values;
+           return { rows: [] };
+        });
+
+        const res = await request(app)
+          .post('/api/partidas')
+          .set('Cookie', [`token=${token}`])
+          .send({ 
+             esporteId: 'esp-1', 
+             equipe1Id: 'eq-1', 
+             equipe2Id: 'eq-2', 
+             placar1: 1, 
+             placar2: 1, 
+             fase: 'FINAL',
+             equipeVencedoraId: '', // Simula "Empate" no frontend
+             medalhaEquipe1: '',
+             medalhaEquipe2: ''
+          });
+
+        expect(res.status).toBe(200);
+        expect(res.body.equipeVencedoraId).toBeNull();
+        expect(res.body.medalhaEquipe1).toBeNull();
+        expect(res.body.medalhaEquipe2).toBeNull();
+      });
     });
   });
 

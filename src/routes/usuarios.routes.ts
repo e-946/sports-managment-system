@@ -72,6 +72,9 @@ router.post('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(UserSchem
 router.put('/:id', requireAuth(['ADMIN_GERAL']), validateBody(UpdateUserSchema), async (req: any, res) => {
   try {
     const { id } = req.params;
+    if (id === '1') {
+      return res.status(403).json({ error: 'Não é possível alterar o usuário admin principal' });
+    }
     const body = req.body;
     const old = await db.getUserById(id);
     if (!old) return res.status(404).json({ error: 'Usuário não encontrado' });
@@ -98,6 +101,9 @@ router.put('/:id', requireAuth(['ADMIN_GERAL']), validateBody(UpdateUserSchema),
 router.delete('/:id', requireAuth(['ADMIN_GERAL']), async (req: any, res) => {
   try {
     const targetUserId = req.params.id;
+    if (targetUserId === '1') {
+      return res.status(403).json({ error: 'Não é possível excluir o usuário admin principal' });
+    }
     const targetUser = await db.getUserById(targetUserId);
     
     if (!targetUser) return res.status(404).json({ error: 'Usuário não encontrado' });

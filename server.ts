@@ -28,6 +28,10 @@ export async function createServer() {
   app.use(cookieParser());
 
   // --- API ROUTING MODULARIZATION ---
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
   app.use('/api', authRouter);
   app.use('/api/delegacoes', delegacoesRouter);
   app.use('/api/esportes', esportesRouter);

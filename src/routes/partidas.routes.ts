@@ -54,6 +54,10 @@ router.post('/', requireAuth(['ADMIN_GERAL', 'MANAGER']), validateBody(MatchSche
       return res.status(400).json({ error: 'As equipes de uma partida devem ser diferentes' });
     }
 
+    if (p.equipeVencedoraId === '') p.equipeVencedoraId = null;
+    if (p.medalhaEquipe1 === '') p.medalhaEquipe1 = null;
+    if (p.medalhaEquipe2 === '') p.medalhaEquipe2 = null;
+
     p.id = uuidv4();
     await db.createPartida(p);
     res.json(p);
