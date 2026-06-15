@@ -1,0 +1,24 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- **API**: Rota de healthcheck (`GET /api/health`) implementada no backend.
+- **Infraestrutura**: Configuração de verificação de integridade (`healthcheck`) nos serviços `web` e `web-dev` no Docker Compose, otimizados para contêineres Alpine usando `wget`.
+- **Testes Unitários**: Criada cobertura de testes para os componentes de interface de `Partidas` e `Delegacoes` no React.
+- **Testes Unitários**: Criada suíte `middlewares.test.ts` dedicada à validação do JWT e schemas do Zod no backend de forma isolada.
+- **Testes de Integração**: Novas asserções em `api.test.ts` cobrindo o healthcheck e manipulação das restrições do Admin primário.
+- **Testes E2E**: Script `partidas-crud.spec.ts` introduzido no Playwright para validar a tela de gerenciamento de partidas e formulários sob o cargo de Admin.
+
+### Changed
+- **Segurança**: Aplicado um bloqueio de segurança na rota de usuários; qualquer tentativa de edição (PUT) ou deleção (DELETE) na conta do Admin root (ID `'1'`) é estritamente bloqueada com erro de autorização.
+- **UI/UX**: Modais da área administrativa (`Usuarios`, `Equipes`, `Esportes`, `Participantes`, `Delegacoes`, `Partidas`) receberam ajustes de CSS (`max-h-[90vh]` e `overflow-y-auto`). Agora é possível realizar a rolagem interna do formulário em dispositivos menores sem quebrar a janela.
+
+### Fixed
+- **API**: Corrigido um erro crasso (`Status 500`) ao cadastrar partidas com resultado de "Empate" ou campos vazios para medalhas. O backend agora sanitiza ativamente *strings* vazias (`""`) do frontend convertendo-as para a representação `null` original aceita pelo driver UUID do PostgreSQL.
+- **API/Validação**: A validação `UpdateUserSchema` do Zod parou de exigir a presença do campo CPF no payload, sincronizando o contrato com os modais do frontend que não o exibiam na edição.
