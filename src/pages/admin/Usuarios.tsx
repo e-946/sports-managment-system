@@ -68,7 +68,7 @@ export function Usuarios() {
         const err = await res.json();
         setError(err.error || 'Erro ao cadastrar usuário');
       }
-    } catch(err) {
+    } catch (err) {
       setError('Erro de conexão ao cadastrar usuário');
     }
   };
@@ -99,7 +99,7 @@ export function Usuarios() {
         const err = await res.json();
         setEditError(err.error || 'Erro ao atualizar usuário');
       }
-    } catch(err) {
+    } catch (err) {
       setEditError('Erro de conexão ao atualizar usuário');
     }
   };
@@ -115,7 +115,7 @@ export function Usuarios() {
         const err = await res.json();
         setError(err.error || 'Erro ao excluir usuário');
       }
-    } catch(err) {
+    } catch (err) {
       setError('Erro de conexão ao excluir usuário');
     }
   };
@@ -157,35 +157,35 @@ export function Usuarios() {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
-            <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-              value={formData.nome} onChange={e => setFormData({...formData, nome: e.target.value})} />
+            <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+              value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CPF</label>
-            <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-               value={formData.cpf} onChange={e => setFormData({...formData, cpf: formatCPF(e.target.value)})} />
+            <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+              value={formData.cpf} onChange={e => setFormData({ ...formData, cpf: formatCPF(e.target.value) })} />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Senha</label>
-            <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-              value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
+            <input type="password" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+              value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Papel (Role)</label>
-            <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-              value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}>
-               {user?.role === 'ADMIN_GERAL' && <option value="MANAGER">Gerente</option>}
-               <option value="MODERADOR">Moderador</option>
-               {user?.role === 'ADMIN_GERAL' && <option value="ADMIN_GERAL">Admin Geral</option>}
+            <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+              value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })}>
+              {user?.role === 'ADMIN_GERAL' && <option value="MANAGER">Gerente</option>}
+              <option value="MODERADOR">Moderador</option>
+              {user?.role === 'ADMIN_GERAL' && <option value="ADMIN_GERAL">Admin Geral</option>}
             </select>
           </div>
           {formData.role === 'MODERADOR' && (
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Delegação</label>
-              <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors" 
-                value={formData.delegacaoId} onChange={e => setFormData({...formData, delegacaoId: e.target.value})}>
-                 <option value="">Selecione a Delegação</option>
-                 {delegacoes.map(d => <option key={d.id} value={d.id}>{d.nome}</option>)}
+              <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
+                value={formData.delegacaoId} onChange={e => setFormData({ ...formData, delegacaoId: e.target.value })}>
+                <option value="">Selecione a Delegação</option>
+                {delegacoes.map(d => <option key={d.id} value={d.id}>{d.nome}</option>)}
               </select>
             </div>
           )}
@@ -198,49 +198,49 @@ export function Usuarios() {
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex-1 flex flex-col">
-         <div className="overflow-x-auto">
-            <table className="w-full min-w-[600px]">
-              <thead>
-                <tr>
-                  <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Usuário</th>
-                  <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">CPF</th>
-                  <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Role</th>
-                  <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Delegação</th>
-                  <th className="px-8 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Ações</th>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px]">
+            <thead>
+              <tr>
+                <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Usuário</th>
+                <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">CPF</th>
+                <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Role</th>
+                <th className="px-8 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Delegação</th>
+                <th className="px-8 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {usuarios.map((u, idx) => (
+                <tr key={u.id || `u-${idx}`} className="hover:bg-slate-50/80 transition-colors">
+                  <td className="px-8 py-5 whitespace-nowrap text-sm font-bold text-slate-700">{u.nome}</td>
+                  <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">{formatCPF(u.cpf)}</td>
+                  <td className="px-8 py-5 whitespace-nowrap text-sm text-indigo-600 font-bold">{u.role}</td>
+                  <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium bg-slate-50/30">{u.delegacaoNome}</td>
+                  <td className="px-8 py-5 whitespace-nowrap text-sm text-right flex items-center justify-end gap-2">
+                    {canEditOrDelete() && (
+                      <button onClick={() => startEdit(u)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors">
+                        <Edit2 className="w-5 h-5" />
+                      </button>
+                    )}
+                    {canDeleteUserObj(u) && (
+                      <button onClick={() => handleDelete(u.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
-                {usuarios.map((u, idx) => (
-                   <tr key={u.id || `u-${idx}`} className="hover:bg-slate-50/80 transition-colors">
-                     <td className="px-8 py-5 whitespace-nowrap text-sm font-bold text-slate-700">{u.nome}</td>
-                     <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">{formatCPF(u.cpf)}</td>
-                     <td className="px-8 py-5 whitespace-nowrap text-sm text-indigo-600 font-bold">{u.role}</td>
-                     <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium bg-slate-50/30">{u.delegacaoNome}</td>
-                     <td className="px-8 py-5 whitespace-nowrap text-sm text-right flex items-center justify-end gap-2">
-                       {canEditOrDelete() && (
-                         <button onClick={() => startEdit(u)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors">
-                           <Edit2 className="w-5 h-5" />
-                         </button>
-                       )}
-                       {canDeleteUserObj(u) && (
-                         <button onClick={() => handleDelete(u.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors">
-                           <Trash2 className="w-5 h-5" />
-                         </button>
-                       )}
-                     </td>
-                   </tr>
-                ))}
-                {usuarios.length===0 && <tr key="empty"><td colSpan={5} className="px-8 py-16 text-center text-slate-400 font-medium bg-slate-50/30">Nenhum usuário cadastrado</td></tr>}
-              </tbody>
-            </table>
-         </div>
+              ))}
+              {usuarios.length === 0 && <tr key="empty"><td colSpan={5} className="px-8 py-16 text-center text-slate-400 font-medium bg-slate-50/30">Nenhum usuário cadastrado</td></tr>}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Edit Modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg flex flex-col max-h-[90vh] relative">
-            <button 
+            <button
               onClick={() => setEditingUser(null)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition z-10"
             >
@@ -257,31 +257,31 @@ export function Usuarios() {
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nome</label>
                   <input type="text" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                    value={editFormData.nome} onChange={e => setEditFormData({...editFormData, nome: e.target.value})} />
+                    value={editFormData.nome} onChange={e => setEditFormData({ ...editFormData, nome: e.target.value })} />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Papel (Role)</label>
                   <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                    value={editFormData.role} onChange={e => setEditFormData({...editFormData, role: e.target.value})}>
-                     <option value="MANAGER">Gerente</option>
-                     <option value="MODERADOR">Moderador</option>
-                     <option value="ADMIN_GERAL">Admin Geral</option>
+                    value={editFormData.role} onChange={e => setEditFormData({ ...editFormData, role: e.target.value })}>
+                    <option value="MANAGER">Gerente</option>
+                    <option value="MODERADOR">Moderador</option>
+                    <option value="ADMIN_GERAL">Admin Geral</option>
                   </select>
                 </div>
                 {editFormData.role === 'MODERADOR' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Delegação</label>
                     <select required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                      value={editFormData.delegacaoId} onChange={e => setEditFormData({...editFormData, delegacaoId: e.target.value})}>
-                       <option value="">Selecione a Delegação</option>
-                       {delegacoes.map(d => <option key={d.id} value={d.id}>{d.nome}</option>)}
+                      value={editFormData.delegacaoId} onChange={e => setEditFormData({ ...editFormData, delegacaoId: e.target.value })}>
+                      <option value="">Selecione a Delegação</option>
+                      {delegacoes.map(d => <option key={d.id} value={d.id}>{d.nome}</option>)}
                     </select>
                   </div>
                 )}
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nova Senha (deixe em branco para não alterar)</label>
                   <input type="password" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
-                    value={editFormData.password} onChange={e => setEditFormData({...editFormData, password: e.target.value})} />
+                    value={editFormData.password} onChange={e => setEditFormData({ ...editFormData, password: e.target.value })} />
                 </div>
                 <div className="pt-4 flex justify-end gap-3">
                   <button type="button" onClick={() => setEditingUser(null)} className="px-6 py-3 border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition">
