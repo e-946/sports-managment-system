@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **UI/Filtros**: Adicionada barra de filtros na listagem de Equipes, permitindo filtrar os resultados simultaneamente por Esporte, Categoria e Delegação.
 - **Validação**: Inserida regra de negócio na seleção de participantes e formação de equipes, bloqueando o cadastro de membros com sexo divergente da categoria exigida pelo esporte selecionado (exeto para esportes de categoria 'Misto').
 - **API**: Rota de healthcheck (`GET /api/health`) implementada no backend.
 - **Infraestrutura**: Configuração de verificação de integridade (`healthcheck`) nos serviços `web` e `web-dev` no Docker Compose, otimizados para contêineres Alpine usando `wget`.

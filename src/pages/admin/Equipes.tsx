@@ -30,6 +30,10 @@ export function Equipes() {
   const [error, setError] = useState('');
   const [editError, setEditError] = useState('');
 
+  const [listFilterEsporte, setListFilterEsporte] = useState('');
+  const [listFilterCategoria, setListFilterCategoria] = useState('');
+  const [listFilterDelegacao, setListFilterDelegacao] = useState('');
+
   const loadData = () => {
     fetch('/api/equipes').then(r => r.json()).then(data => setEquipes(Array.isArray(data) ? data : []));
     fetch('/api/esportes').then(r => r.json()).then(data => {
@@ -174,7 +178,7 @@ export function Equipes() {
     const matchesDelegation = p.delegacaoId === formData.delegacaoId;
     const matchesSearch = p.nomeAbreviado.toLowerCase().includes(partSearch.toLowerCase()) ||
       p.nomeCompleto.toLowerCase().includes(partSearch.toLowerCase());
-      
+
     let matchesCategoria = true;
     if (currentEsporte && currentEsporte.categoria !== 'MISTO') {
       matchesCategoria = p.sexo === currentEsporte.categoria;
@@ -188,7 +192,7 @@ export function Equipes() {
     const matchesDelegation = p.delegacaoId === editFormData.delegacaoId;
     const matchesSearch = p.nomeAbreviado.toLowerCase().includes(editPartSearch.toLowerCase()) ||
       p.nomeCompleto.toLowerCase().includes(editPartSearch.toLowerCase());
-      
+
     let matchesCategoria = true;
     if (currentEditEsporte && currentEditEsporte.categoria !== 'MISTO') {
       matchesCategoria = p.sexo === currentEditEsporte.categoria;
@@ -197,8 +201,16 @@ export function Equipes() {
     return matchesDelegation && matchesSearch && matchesCategoria;
   });
 
+  const filteredEquipes = equipes.filter(e => {
+    const esporte = esportes.find(esp => esp.id === e.esporteId);
+    if (listFilterEsporte && esporte?.nome !== listFilterEsporte) return false;
+    if (listFilterCategoria && esporte?.categoria !== listFilterCategoria) return false;
+    if (listFilterDelegacao && e.delegacaoId !== listFilterDelegacao) return false;
+    return true;
+  });
+
   const groupedEquipes: Record<string, Record<string, Equipe[]>> = {};
-  equipes.forEach(e => {
+  filteredEquipes.forEach(e => {
     const esporte = esportes.find(esp => esp.id === e.esporteId);
     const esporteNome = esporte?.nome || 'Desconhecido';
     const categoria = esporte?.categoria || 'Geral';
@@ -301,11 +313,51 @@ export function Equipes() {
         </form>
       </div>
 
+      {/* Filtros da Lista */}
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
+        <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
+          <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+          Filtros da Listagem
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Esporte</label>
+            <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors text-sm"
+              value={listFilterEsporte} onChange={e => setListFilterEsporte(e.target.value)}>
+              <option value="">Todos os Esportes</option>
+              {Array.from(new Set(esportes.map(e => e.nome))).map(nome => (
+                <option key={nome} value={nome}>{nome}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Categoria</label>
+            <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors text-sm"
+              value={listFilterCategoria} onChange={e => setListFilterCategoria(e.target.value)}>
+              <option value="">Todas as Categorias</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMININO">Feminino</option>
+              <option value="MISTO">Misto</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Delegação</label>
+            <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors text-sm"
+              value={listFilterDelegacao} onChange={e => setListFilterDelegacao(e.target.value)}>
+              <option value="">Todas as Delegações</option>
+              {delegacoes.map(d => (
+                <option key={d.id} value={d.id}>{d.nome}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
       {/* Lista de equipes */}
       <div className="flex flex-col gap-10 mt-4 animate-fadeIn pb-8">
-        {equipes.length === 0 && (
+        {filteredEquipes.length === 0 && (
           <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-16 text-center text-slate-400 font-medium">
-            Nenhuma equipe cadastrada.
+            Nenhuma equipe encontrada.
           </div>
         )}
         {Object.entries(groupedEquipes).map(([esporteNome, categorias]) => (
