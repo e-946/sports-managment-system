@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --env-file=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js up && tsx --env-file=.env watch server.ts",
+    "dev": "node --env-file=.env node_modules/node-pg-migrate/bin/node-pg-migrate.js up && tsx watch server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node-pg-migrate up && node dist/server.cjs",
     "migrate": "node-pg-migrate up",
