@@ -505,6 +505,23 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
       });
     });
 
+    describe('PUT /api/usuarios/:id', () => {
+      it('fails when trying to edit the seeded admin user with ID 1', async () => {
+        const token = generateToken('admin-2', 'ADMIN_GERAL');
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ id: 'admin-2', role: 'ADMIN_GERAL' }]
+        });
+
+        const res = await request(app)
+          .put('/api/usuarios/1')
+          .set('Cookie', [`token=${token}`])
+          .send({ nome: 'Hacked' });
+
+        expect(res.status).toBe(403);
+        expect(res.body.error).toBe('Não é possível alterar o usuário admin principal');
+      });
+    });
+
     describe('DELETE /api/usuarios/:id', () => {
       it('fails when user tries to delete their own account', async () => {
         const token = generateToken('admin-1', 'ADMIN_GERAL');
@@ -540,6 +557,20 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
 
         expect(res.status).toBe(403);
         expect(res.body.error).toBe('Não é possível excluir outro ADMIN_GERAL');
+      });
+
+      it('fails when trying to delete the seeded admin user with ID 1', async () => {
+        const token = generateToken('admin-2', 'ADMIN_GERAL');
+        mockQuery.mockResolvedValueOnce({
+          rows: [{ id: 'admin-2', role: 'ADMIN_GERAL' }]
+        });
+
+        const res = await request(app)
+          .delete('/api/usuarios/1')
+          .set('Cookie', [`token=${token}`]);
+
+        expect(res.status).toBe(403);
+        expect(res.body.error).toBe('Não é possível excluir o usuário admin principal');
       });
     });
   });
@@ -813,6 +844,16 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
         expect(res.status).toBe(400);
         expect(res.body.error).toContain('Erro de validação');
         expect(res.body.error).toContain('participanteIds');
+      });
+    });
+  });
+
+  describe('Public API', () => {
+    describe('GET /api/health', () => {
+      it('returns 200 OK', async () => {
+        const res = await request(app).get('/api/health');
+        expect(res.status).toBe(200);
+        expect(res.body.status).toBe('ok');
       });
     });
   });
