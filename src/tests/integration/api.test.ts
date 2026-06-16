@@ -63,6 +63,30 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
       expect(res.headers['set-cookie'][0]).toContain('token=');
     });
 
+    it('strips special characters from CPF before checking the database', async () => {
+      const plainPassword = 'mypassword';
+      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+      
+      mockQuery.mockResolvedValueOnce({
+        rows: [{
+          id: '123',
+          nome: 'Test Manager',
+          cpf: '12345678901',
+          password: hashedPassword,
+          role: 'MANAGER',
+          delegacao_id: 'del-1'
+        }]
+      });
+
+      const res = await request(app)
+        .post('/api/login')
+        .send({ cpf: '123.456.789-01', password: plainPassword });
+
+      expect(res.status).toBe(200);
+      // The query for user should use the cleaned CPF
+      expect(mockQuery.mock.calls[0][1][0]).toBe('12345678901');
+    });
+
     it('returns 401 when password does not match', async () => {
       const hashedPassword = await bcrypt.hash('secret', 10);
       

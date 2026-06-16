@@ -18,10 +18,11 @@ export function Login() {
     setError('');
 
     try {
+      const cleanCpf = cpf.replace(/\D/g, '');
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cpf, password })
+        body: JSON.stringify({ cpf: cleanCpf, password })
       });
 
       const data = await res.json();
