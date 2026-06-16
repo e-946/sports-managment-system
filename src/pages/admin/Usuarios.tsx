@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserPlus, Trash2, Edit2, X } from 'lucide-react';
+import { UserPlus, Trash2, Edit2, X, Copy } from 'lucide-react';
 import { Delegacao } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 
@@ -213,7 +213,19 @@ export function Usuarios() {
               {usuarios.map((u, idx) => (
                 <tr key={u.id || `u-${idx}`} className="hover:bg-slate-50/80 transition-colors">
                   <td className="px-8 py-5 whitespace-nowrap text-sm font-bold text-slate-700">{u.nome}</td>
-                  <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">{formatCPF(u.cpf)}</td>
+                  <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500">
+                    <div className="flex items-center gap-2">
+                      {formatCPF(u.cpf)}
+                      <button 
+                        onClick={() => navigator.clipboard.writeText(u.cpf.replace(/\D/g, ''))}
+                        className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                        title="Copiar CPF"
+                        data-testid={`copy-cpf-${u.id}`}
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
                   <td className="px-8 py-5 whitespace-nowrap text-sm text-indigo-600 font-bold">{u.role}</td>
                   <td className="px-8 py-5 whitespace-nowrap text-sm text-slate-500 font-medium bg-slate-50/30">{u.delegacaoNome}</td>
                   <td className="px-8 py-5 whitespace-nowrap text-sm text-right flex items-center justify-end gap-2">

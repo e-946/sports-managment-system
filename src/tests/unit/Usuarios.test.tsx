@@ -130,4 +130,35 @@ describe('Usuarios Component', () => {
       }));
     });
   });
+
+  it('copies only numbers when copy CPF button is clicked', async () => {
+    mockUser = { id: 'admin-1', role: 'ADMIN_GERAL' };
+
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: writeTextMock,
+      },
+    });
+
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [
+          { id: 'user-1', nome: 'User One', cpf: '123.456.789-01', role: 'MANAGER', delegacaoNome: '-' }
+        ]
+      })
+      .mockResolvedValueOnce({ ok: true, json: async () => [] });
+
+    render(<Usuarios />);
+
+    await waitFor(() => {
+      expect(screen.getByText('User One')).toBeInTheDocument();
+    });
+
+    const copyButton = screen.getByTestId('copy-cpf-user-1');
+    fireEvent.click(copyButton);
+
+    expect(writeTextMock).toHaveBeenCalledWith('12345678901');
+  });
 });
