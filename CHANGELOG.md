@@ -27,3 +27,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **API/Validação**: A validação `UpdateUserSchema` do Zod parou de exigir a presença do campo CPF no payload, sincronizando o contrato com os modais do frontend que não o exibiam na edição.
 - **Infraestrutura/Docker**: Corrigida falha no `healthcheck` onde o `wget` dentro do contêiner Alpine tentava resolver `localhost` via IPv6 (`::1`), resultando em *Connection Refused* pois a API Node.js escuta apenas em IPv4 (`0.0.0.0`). O alvo foi alterado para o IP literal `127.0.0.1`.
 - **Scripts**: Corrigido o script `dev` do `package.json` que estava quebrando o servidor de desenvolvimento. O parâmetro `--env-file=.env` estava sendo repassado para o `tsx` de forma incorreta causando erro interno de módulo (`ERR_MODULE_NOT_FOUND`).
+- **Autenticação**: O fluxo de login agora remove caracteres especiais do CPF tanto no frontend quanto na API antes de prosseguir com a autenticação.
