@@ -102,4 +102,31 @@ describe('Login Component', () => {
       }));
     });
   });
+
+  it('accepts admin as a valid CPF and sends it to API without stripping letters', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: '1', role: 'ADMIN_GERAL' })
+    });
+
+    const { container } = render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    const cpfInput = screen.getByPlaceholderText(/Digite seu CPF/i);
+    const passwordInput = container.querySelector('input[type="password"]') as HTMLInputElement;
+
+    fireEvent.change(cpfInput, { target: { value: 'admin' } });
+    fireEvent.change(passwordInput, { target: { value: 'mypass' } });
+    fireEvent.click(screen.getByRole('button', { name: /Entrar no Sistema/i }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/login', expect.objectContaining({
+        body: JSON.stringify({ cpf: 'admin', password: 'mypass' })
+      }));
+    });
+  });
 });
+
