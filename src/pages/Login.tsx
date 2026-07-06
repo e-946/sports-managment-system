@@ -18,7 +18,7 @@ export function Login() {
     setError('');
 
     try {
-      const cleanCpf = cpf.replace(/\D/g, '');
+      const cleanCpf = cpf.toLowerCase() === 'admin' ? 'admin' : cpf.replace(/\D/g, '');
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
