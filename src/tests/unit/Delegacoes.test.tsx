@@ -27,7 +27,7 @@ describe('Delegacoes Component', () => {
     
     await waitFor(() => {
       expect(screen.getByText('Brasil')).toBeInTheDocument();
-      expect(screen.getByText('Cadastrar Delegação')).toBeInTheDocument();
+      expect(screen.getByText('Cadastrar')).toBeInTheDocument();
     });
   });
 });

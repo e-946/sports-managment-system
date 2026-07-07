@@ -83,7 +83,7 @@ export function Usuarios() {
         role: editFormData.role,
         delegacaoId: editFormData.role === 'MODERADOR' ? editFormData.delegacaoId : ''
       };
-      if (editFormData.password !== '' || editFormData.password !== null) {
+      if (editFormData.password !== '' && editFormData.password !== null) {
         payload.password = editFormData.password;
       }
 
@@ -217,7 +217,7 @@ export function Usuarios() {
                     <div className="flex items-center gap-2">
                       {formatCPF(u.cpf)}
                       <button 
-                        onClick={() => navigator.clipboard.writeText(u.cpf.replace(/\D/g, ''))}
+                        onClick={() => navigator.clipboard.writeText(u.cpf === 'admin' ? 'admin' : u.cpf.replace(/\D/g, ''))}
                         className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                         title="Copiar CPF"
                         data-testid={`copy-cpf-${u.id}`}

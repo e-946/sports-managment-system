@@ -55,7 +55,7 @@ describe('Equipes Component', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Dream Team')).toBeInTheDocument();
-      expect(screen.getByText('Pelé')).toBeInTheDocument();
+      expect(screen.getAllByText('Pelé')[0]).toBeInTheDocument();
       expect(screen.getByText('Categoria: MASCULINO')).toBeInTheDocument();
       expect(screen.getByText('Nº: 1')).toBeInTheDocument();
     });

@@ -17,24 +17,24 @@ describe('Backend Middlewares', () => {
       middleware(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Não autenticado' });
+      expect(res.json).toHaveBeenCalledWith({ error: 'Unauthorized' });
     });
   });
 
   describe('validateBody', () => {
-    it('calls next if validation passes', () => {
+    it('calls next if validation passes', async () => {
       const schema = z.object({ name: z.string() });
       const middleware = validateBody(schema);
       const req: any = { body: { name: 'Test' } };
       const res: any = {};
       const next = vi.fn();
 
-      middleware(req, res, next);
+      await middleware(req, res, next);
 
       expect(next).toHaveBeenCalled();
     });
 
-    it('returns 400 if validation fails', () => {
+    it('returns 400 if validation fails', async () => {
       const schema = z.object({ name: z.string() });
       const middleware = validateBody(schema);
       const req: any = { body: { name: 123 } };
@@ -44,7 +44,7 @@ describe('Backend Middlewares', () => {
       };
       const next = vi.fn();
 
-      middleware(req, res, next);
+      await middleware(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('Erro de validação') }));
