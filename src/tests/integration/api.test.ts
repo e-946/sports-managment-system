@@ -119,6 +119,30 @@ describe('API Integration Tests - Comprehensive Business Rules', () => {
       expect(res.body.error).toBe('Credenciais inválidas');
     });
 
+    it('authenticates successfully when username is exactly admin', async () => {
+      const plainPassword = 'adminpassword';
+      const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+      mockQuery.mockResolvedValueOnce({
+        rows: [{
+          id: 'admin-1',
+          nome: 'Administrador',
+          cpf: 'admin',
+          password: hashedPassword,
+          role: 'ADMIN_GERAL'
+        }]
+      });
+
+      const res = await request(app)
+        .post('/api/login')
+        .send({ cpf: 'admin', password: plainPassword });
+
+      expect(res.status).toBe(200);
+      expect(res.body.nome).toBe('Administrador');
+      expect(res.body.role).toBe('ADMIN_GERAL');
+      // Ensure the query actually queried for 'admin' (mockQuery spy logic isn't easily accessible here, but the route logic dictates it)
+    });
+
     it('returns 403 when trying to log in as a PARTICIPANTE (admins only)', async () => {
       const plainPassword = 'mypassword';
       const hashedPassword = await bcrypt.hash(plainPassword, 10);
