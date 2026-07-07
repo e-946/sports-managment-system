@@ -38,7 +38,7 @@ describe('Partidas Component', () => {
     const { container } = render(<Partidas />);
     
     await waitFor(() => {
-      expect(screen.getByText('Registrar Partida')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Registrar Partida/i })).toBeInTheDocument();
     });
 
     // We can simulate filling out the form by checking element presence

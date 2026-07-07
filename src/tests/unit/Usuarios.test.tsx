@@ -107,8 +107,8 @@ describe('Usuarios Component', () => {
     (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => [] });
     (global.fetch as any).mockResolvedValueOnce({ ok: true, json: async () => [] });
 
-    // Click edit button
-    const editButton = container.querySelector('button.hover\\:text-indigo-600');
+    // Click edit button (it's the second button with hover:text-indigo-600, or the one without a title)
+    const editButton = Array.from(container.querySelectorAll('button.hover\\:text-indigo-600')).find(b => !b.getAttribute('title'));
     expect(editButton).toBeInTheDocument();
     fireEvent.click(editButton!);
 
